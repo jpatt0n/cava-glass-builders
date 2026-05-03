@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-width: 24px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        font-family: PerpetuaTitlingMT-Bold, 'Perpetua Titling MT';
+        font-size: 219.7px;
+        font-weight: 700;
+      }
+
+      .cls-5 {
+        letter-spacing: -.13em;
+      }
+
+      .cls-2 {
+        stroke-width: 30px;
+      }
+
+      .cls-6 {
+        font-family: HelveticaNeueLTPro-Th, 'Helvetica Neue LT Pro';
+        font-size: 140.62px;
+        letter-spacing: .28em;
+      }
+
+      .cls-3 {
+        stroke-width: 18px;
+      }
+
+      .cls-7 {
+        letter-spacing: -.16em;
+      }
+    </style>
+  </defs>
+  <text class="cls-4" transform="translate(212.58 815.48)"><tspan x="0" y="0">C</tspan><tspan class="cls-7" x="158.01" y="0">A</tspan><tspan class="cls-5" x="297.79" y="0">V</tspan><tspan x="432.96" y="0">A</tspan></text>
+  <text class="cls-6" transform="translate(480.55 991.51)"><tspan x="0" y="0">BUILDERS</tspan></text>
+  <text class="cls-4" transform="translate(988.84 815.48)"><tspan x="0" y="0">GLASS</tspan></text>
+  <line class="cls-3" x1="643.96" y1="396.82" x2="643.96" y2="495.38"/>
+  <line class="cls-1" x1="769.18" y1="300.95" x2="769.18" y2="591.25"/>
+  <line class="cls-1" x1="1017.11" y1="59.59" x2="1017.11" y2="591.25"/>
+  <line class="cls-2" x1="894.4" y1="714.69" x2="894.4" y2="177.52"/>
+  <line class="cls-3" x1="1144.84" y1="396.82" x2="1144.84" y2="495.38"/>
+  <g>
+    <path d="M979.55,111.66l-85.15-85.15-327.49,327.49c-4.58,4.58-4.4,12.13.55,16.48,4.52,3.97,11.44,3.46,15.69-.79L894.4,58.44l84.34,84.34c.56.56,1.51.16,1.51-.62v-28.82c0-.63-.25-1.23-.69-1.68Z"/>
+    <path d="M1222.6,354.72l-166.65-166.65c-.55-.55-1.5-.16-1.5.62v28.82c0,.63.25,1.24.7,1.68l151.77,151.77c2.2,2.2,5.09,3.31,7.98,3.31s5.69-1.07,7.88-3.2c4.5-4.39,4.27-11.9-.17-16.34Z"/>
+  </g>
+</svg>

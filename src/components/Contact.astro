@@ -1,0 +1,165 @@
+---
+import { site } from "../data/site";
+---
+
+<section id="contact" class="relative bg-[var(--color-ink)] py-24 md:py-32 lg:py-40">
+  <div class="mx-auto grid max-w-7xl gap-16 px-6 lg:grid-cols-12 lg:gap-20 lg:px-10">
+    <div class="reveal lg:col-span-5">
+      <p class="flex items-center gap-4 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">
+        <span class="hairline"></span>
+        Contact
+      </p>
+      <h2 class="mt-6 font-display text-4xl leading-tight md:text-6xl">
+        Let's talk
+        <span class="block italic text-[var(--color-bone-muted)]">about your project.</span>
+      </h2>
+      <p class="mt-6 max-w-md text-base leading-relaxed text-[var(--color-bone-muted)]">
+        Tell us a bit about the scope and we'll get back within one business day
+        with next steps and a quote.
+      </p>
+
+      <dl class="mt-12 space-y-8">
+        <div>
+          <dt class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Phone</dt>
+          <dd class="mt-2">
+            <a href={site.contact.phoneHref} class="font-display text-2xl text-[var(--color-bone)] hover:text-[var(--color-steel)]">
+              {site.contact.phone}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Email</dt>
+          <dd class="mt-2">
+            <a href={`mailto:${site.contact.email}`} class="font-display text-xl text-[var(--color-bone)] hover:text-[var(--color-steel)] break-all">
+              {site.contact.email}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Service Area</dt>
+          <dd class="mt-2 font-display text-xl text-[var(--color-bone)]">
+            {site.contact.serviceArea}
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="reveal lg:col-span-7">
+      <form
+        id="contact-form"
+        action="/api/contact"
+        method="POST"
+        class="grid gap-5 border border-[var(--color-ink-line)] bg-[var(--color-ink-soft)] p-7 md:grid-cols-2 md:p-10"
+      >
+        <!-- Honeypot for bots -->
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+        <label class="field md:col-span-1">
+          <span>Name <em>*</em></span>
+          <input required name="name" type="text" autocomplete="name" />
+        </label>
+        <label class="field md:col-span-1">
+          <span>Company</span>
+          <input name="company" type="text" autocomplete="organization" />
+        </label>
+        <label class="field md:col-span-1">
+          <span>Email <em>*</em></span>
+          <input required name="email" type="email" autocomplete="email" />
+        </label>
+        <label class="field md:col-span-1">
+          <span>Phone</span>
+          <input name="phone" type="tel" autocomplete="tel" />
+        </label>
+        <label class="field md:col-span-2">
+          <span>Project Type</span>
+          <select name="project_type">
+            <option value="">Select…</option>
+            <option>Shower Enclosure</option>
+            <option>Mirrors</option>
+            <option>Interior Glass / Partitions</option>
+            <option>Railings</option>
+            <option>Wine Room / Steel Doors</option>
+            <option>Multifamily / Hotel</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label class="field md:col-span-2">
+          <span>Message <em>*</em></span>
+          <textarea required name="message" rows="5"></textarea>
+        </label>
+
+        <div class="md:col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p id="form-status" class="text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]" role="status"></p>
+          <button
+            type="submit"
+            class="group inline-flex items-center justify-center gap-3 bg-[var(--color-bone)] px-8 py-4 text-xs uppercase tracking-luxe text-[var(--color-ink)] transition hover:bg-[var(--color-steel)] disabled:opacity-60"
+          >
+            <span class="btn-label">Send Inquiry</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform group-hover:translate-x-1">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .field span {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--color-bone-muted);
+  }
+  .field em { color: var(--color-steel); font-style: normal; }
+  .field input,
+  .field select,
+  .field textarea {
+    background: transparent;
+    border: 1px solid var(--color-ink-line);
+    color: var(--color-bone);
+    padding: 0.85rem 1rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--color-steel);
+    background: rgba(255,255,255,0.02);
+  }
+  .field select option { background: var(--color-ink-soft); color: var(--color-bone); }
+</style>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const status = document.getElementById("form-status");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
+      const label = btn?.querySelector(".btn-label");
+      if (status) status.textContent = "Sending…";
+      btn?.setAttribute("disabled", "true");
+      try {
+        const data = new FormData(form);
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" },
+        });
+        if (!res.ok) throw new Error("Request failed");
+        if (status) status.textContent = "Thank you — we'll be in touch shortly.";
+        if (label) label.textContent = "Sent";
+        form.reset();
+      } catch (err) {
+        if (status) status.textContent = "Something went wrong. Please call or email us directly.";
+        btn?.removeAttribute("disabled");
+      }
+    });
+  }
+</script>

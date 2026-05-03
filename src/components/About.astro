@@ -1,0 +1,68 @@
+---
+import { Picture } from "astro:assets";
+import aboutImg from "../assets/projects/glass-wine-room.jpg";
+import { site } from "../data/site";
+---
+
+<section id="about" class="relative bg-[var(--color-ink-soft)] py-24 md:py-32 lg:py-40">
+  <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-12 lg:gap-20 lg:px-10">
+    <div class="reveal lg:col-span-5">
+      <div class="relative aspect-[4/5] overflow-hidden">
+        <Picture
+          src={aboutImg}
+          alt="Glass-front wine room installation"
+          widths={[480, 720, 960]}
+          sizes="(min-width: 1024px) 40vw, 100vw"
+          formats={["avif", "webp"]}
+          quality={70}
+          pictureAttributes={{ class: "block h-full w-full" }}
+          class="h-full w-full object-cover"
+        />
+        <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[rgba(11,13,16,0.65)] to-transparent"></div>
+      </div>
+    </div>
+
+    <div class="reveal lg:col-span-7 lg:pt-6">
+      <p class="flex items-center gap-4 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">
+        <span class="hairline"></span>
+        About Cava Glass
+      </p>
+      <h2 class="mt-6 font-display text-4xl leading-tight md:text-6xl">
+        A decade of glass.
+        <span class="block italic text-[var(--color-bone-muted)]">
+          Built on relationships.
+        </span>
+      </h2>
+
+      <div class="mt-8 space-y-5 text-base leading-relaxed text-[var(--color-bone-muted)]">
+        <p>
+          Cava Glass Builders is a Houston-based interior glass company founded in
+          {site.founded}, serving the builder, contractor, and high-end residential
+          markets. Our team brings {site.yearsExperience} years of industry
+          experience to every job — from a single shower swap to a multi-tower
+          multifamily build-out.
+        </p>
+        <p>
+          We specialize in custom shower enclosures, mirrors, glass partitions,
+          railings, and steel doors — fabricated to architectural specifications
+          and installed by people who treat the punch list as personal.
+        </p>
+      </div>
+
+      <ul class="mt-10 grid gap-px bg-[var(--color-ink-line)] sm:grid-cols-3">
+        <li class="bg-[var(--color-ink-soft)] p-5">
+          <p class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Established</p>
+          <p class="mt-2 font-display text-2xl">{site.founded}</p>
+        </li>
+        <li class="bg-[var(--color-ink-soft)] p-5">
+          <p class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Experience</p>
+          <p class="mt-2 font-display text-2xl">{site.yearsExperience} Years</p>
+        </li>
+        <li class="bg-[var(--color-ink-soft)] p-5">
+          <p class="text-xs uppercase tracking-luxe text-[var(--color-steel)]">Warranty</p>
+          <p class="mt-2 font-display text-2xl">1 Year</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

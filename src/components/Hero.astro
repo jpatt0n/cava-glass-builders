@@ -1,0 +1,76 @@
+---
+import { Picture } from "astro:assets";
+import heroImage from "../assets/projects/hero-spa-bath.jpg";
+import { site } from "../data/site";
+---
+
+<section id="top" class="relative isolate min-h-[100svh] overflow-hidden grain">
+  <!-- Background image -->
+  <div class="absolute inset-0 -z-10">
+    <Picture
+      src={heroImage}
+      alt="Custom frameless shower in a spa-style master bath"
+      widths={[640, 960, 1280, 1920, 2560]}
+      sizes="100vw"
+      formats={["avif", "webp"]}
+      quality={70}
+      loading="eager"
+      fetchpriority="high"
+      pictureAttributes={{ class: "block h-full w-full" }}
+      class="h-full w-full object-cover"
+    />
+    <!-- Gradient washes -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[rgba(11,13,16,0.85)] via-[rgba(11,13,16,0.45)] to-[rgba(11,13,16,0.95)]"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[rgba(11,13,16,0.6)] via-transparent to-transparent"></div>
+  </div>
+
+  <div class="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-center px-6 pb-24 pt-40 lg:px-10">
+    <p class="reveal flex items-center gap-4 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">
+      <span class="hairline"></span>
+      Houston · Established {site.founded}
+    </p>
+
+    <h1
+      class="reveal mt-6 max-w-4xl font-display text-5xl leading-[1.05] text-[var(--color-bone)] md:text-7xl lg:text-[5.5rem]"
+    >
+      Premium Interior Glass
+      <span class="block text-[var(--color-bone-muted)] italic">
+        for Custom Builders & Considered Homes.
+      </span>
+    </h1>
+
+    <p
+      class="reveal mt-8 max-w-2xl text-base leading-relaxed text-[var(--color-bone-muted)] md:text-lg"
+    >
+      Custom shower enclosures, mirrors, railings, and architectural glass —
+      precision-fabricated and installed across Greater Houston for builders,
+      designers, and high-end homeowners.
+    </p>
+
+    <div class="reveal mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <a
+        href="#contact"
+        class="group inline-flex items-center justify-center gap-3 bg-[var(--color-bone)] px-8 py-4 text-xs uppercase tracking-luxe text-[var(--color-ink)] transition hover:bg-[var(--color-steel)]"
+      >
+        Request a Quote
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform group-hover:translate-x-1">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a
+        href="#services"
+        class="inline-flex items-center justify-center gap-3 border border-[var(--color-bone)]/30 px-8 py-4 text-xs uppercase tracking-luxe text-[var(--color-bone)] transition hover:border-[var(--color-bone)] hover:bg-white/5"
+      >
+        Explore Services
+      </a>
+    </div>
+
+    <!-- Bottom meta strip -->
+    <div class="reveal absolute inset-x-6 bottom-8 lg:inset-x-10 lg:bottom-10">
+      <div class="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-bone)]/15 pt-6 text-xs uppercase tracking-wide-2 text-[var(--color-bone-muted)]">
+        <span>Showers · Mirrors · Railings · Steel Doors</span>
+        <span class="hidden sm:inline">{site.contact.serviceArea}</span>
+      </div>
+    </div>
+  </div>
+</section>

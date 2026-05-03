@@ -1,0 +1,40 @@
+---
+import { site } from "../data/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="relative border-t border-[var(--color-ink-line)] bg-[var(--color-ink)] py-16">
+  <div class="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-3 lg:px-10">
+    <div>
+      <img src="/logo-cava-white.svg" alt={site.name} class="h-10 w-auto" />
+      <p class="mt-5 max-w-sm text-sm leading-relaxed text-[var(--color-bone-muted)]">
+        {site.shortDescription}
+      </p>
+    </div>
+
+    <div class="md:text-center">
+      <p class="text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">Visit</p>
+      <p class="mt-3 font-display text-lg">{site.contact.location}</p>
+      <p class="text-sm text-[var(--color-bone-muted)]">{site.contact.serviceArea}</p>
+    </div>
+
+    <div class="md:text-right">
+      <p class="text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">Contact</p>
+      <p class="mt-3">
+        <a href={site.contact.phoneHref} class="font-display text-lg hover:text-[var(--color-steel)]">{site.contact.phone}</a>
+      </p>
+      <p>
+        <a href={`mailto:${site.contact.email}`} class="text-sm text-[var(--color-bone-muted)] hover:text-[var(--color-steel)] break-all">
+          {site.contact.email}
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto mt-14 max-w-7xl border-t border-[var(--color-ink-line)] px-6 pt-6 lg:px-10">
+    <div class="flex flex-col items-start justify-between gap-2 text-xs uppercase tracking-wide-2 text-[var(--color-bone-muted)] sm:flex-row sm:items-center">
+      <span>© {year} {site.name}. All rights reserved.</span>
+      <span>{site.warranty} · Houston, TX</span>
+    </div>
+  </div>
+</footer>

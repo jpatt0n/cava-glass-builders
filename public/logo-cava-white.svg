@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1444.38 346.21">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: PerpetuaTitlingMT-Bold, 'Perpetua Titling MT';
+        font-size: 175.17px;
+        font-weight: 700;
+      }
+
+      .cls-4 {
+        letter-spacing: -.13em;
+      }
+
+      .cls-3 {
+        font-family: HelveticaNeueLTPro-Th, 'Helvetica Neue LT Pro';
+        font-size: 112.12px;
+        letter-spacing: .28em;
+      }
+
+      .cls-5 {
+        letter-spacing: -.16em;
+      }
+    </style>
+  </defs>
+  <text class="cls-2" transform="translate(337 170.66)"><tspan x="0" y="0">C</tspan><tspan class="cls-5" x="125.99" y="0">A</tspan><tspan class="cls-4" x="237.44" y="0">V</tspan><tspan x="345.21" y="0">A</tspan></text>
+  <text class="cls-3" transform="translate(346.65 303)"><tspan x="0" y="0">BUILDERS</tspan></text>
+  <text class="cls-2" transform="translate(844.88 170.66)"><tspan x="0" y="0">GLASS</tspan></text>
+  <g>
+    <path class="cls-1" d="M66.51,226.3c-2.39,0-4.33-1.94-4.33-4.34v-37.63c0-2.4,1.94-4.34,4.33-4.34s4.33,1.94,4.33,4.34v37.63c0,2.4-1.94,4.34-4.33,4.34Z"/>
+    <path class="cls-1" d="M113.77,264.34c-3.19,0-5.77-2.59-5.77-5.79v-110.82c0-3.2,2.58-5.79,5.77-5.79s5.77,2.59,5.77,5.79v110.82c0,3.2-2.58,5.79-5.77,5.79Z"/>
+    <path class="cls-1" d="M207.34,264.34c-3.19,0-5.77-2.59-5.77-5.79V55.59c0-3.2,2.58-5.79,5.77-5.79s5.77,2.59,5.77,5.79v202.96c0,3.2-2.58,5.79-5.77,5.79Z"/>
+    <path class="cls-1" d="M161.03,312.91c-3.98,0-7.22-3.24-7.22-7.23V100.61c0-4,3.23-7.23,7.22-7.23s7.22,3.24,7.22,7.23v205.06c0,4-3.23,7.23-7.22,7.23Z"/>
+    <path class="cls-1" d="M255.55,226.3c-2.39,0-4.33-1.94-4.33-4.34v-37.63c0-2.4,1.94-4.34,4.33-4.34s4.33,1.94,4.33,4.34v37.63c0,2.4-1.94,4.34-4.33,4.34Z"/>
+    <g>
+      <path class="cls-1" d="M193.17,75.47l-32.14-32.5-123.6,125.02c-1.73,1.75-1.66,4.63.21,6.29,1.7,1.51,4.32,1.32,5.92-.3l117.47-118.82,31.83,32.2c.21.21.57.06.57-.24v-11c0-.24-.09-.47-.26-.64Z"/>
+      <path class="cls-1" d="M284.9,168.26l-62.9-63.62c-.21-.21-.57-.06-.57.24v11c0,.24.09.47.26.64l57.28,57.94c.83.84,1.92,1.26,3.01,1.26s2.15-.41,2.97-1.22c1.7-1.68,1.61-4.54-.07-6.24Z"/>
+    </g>
+  </g>
+</svg>
