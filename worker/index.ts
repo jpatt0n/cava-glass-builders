@@ -1,27 +1,35 @@
-// Cloudflare Pages Function: POST /api/contact
-// Forwards form submissions to Web3Forms (which delivers to the recipient
-// email associated with the access key). No client-side secrets — the access
-// key lives in the WEB3FORMS_ACCESS_KEY environment variable in Cloudflare.
-//
-// Setup (one-time, by site owner):
-//   1. Sign up at https://web3forms.com using cavaglassbuilders@gmail.com
-//   2. Copy the Access Key it issues
-//   3. In Cloudflare Pages → cava-glass-builders → Settings → Variables and Secrets,
-//      add:  WEB3FORMS_ACCESS_KEY  =  <your key>   (encrypt as a Secret)
-//   4. Re-deploy
+// Cava Glass Builders — Cloudflare Worker entry.
+// Serves static Astro build (./dist) via the ASSETS binding and handles
+// the /api/contact form submission.
 
 interface Env {
+  ASSETS: Fetcher;
   WEB3FORMS_ACCESS_KEY?: string;
 }
 
-export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  const { request, env } = ctx;
+export default {
+  async fetch(request: Request, env: Env, _ctx: ExecutionContext): Promise<Response> {
+    const url = new URL(request.url);
 
+    // Form handler
+    if (url.pathname === "/api/contact") {
+      if (request.method !== "POST") {
+        return json({ ok: false, error: "Method not allowed" }, 405);
+      }
+      return handleContact(request, env);
+    }
+
+    // Everything else → static asset
+    return env.ASSETS.fetch(request);
+  },
+} satisfies ExportedHandler<Env>;
+
+async function handleContact(request: Request, env: Env): Promise<Response> {
   let payload: Record<string, string> = {};
   const ct = request.headers.get("content-type") || "";
   try {
     if (ct.includes("application/json")) {
-      payload = await request.json();
+      payload = (await request.json()) as Record<string, string>;
     } else {
       const fd = await request.formData();
       fd.forEach((v, k) => (payload[k] = String(v)));
@@ -35,7 +43,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     return json({ ok: true });
   }
 
-  // Required fields
   const name = (payload.name || "").trim();
   const email = (payload.email || "").trim();
   const message = (payload.message || "").trim();
@@ -63,7 +70,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     company: payload.company || "",
     project_type: payload.project_type || "",
     message,
-    // Reply-To so hitting Reply in Gmail goes to the lead
     replyto: email,
   };
 
@@ -86,9 +92,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     console.error("contact handler error", err);
     return json({ ok: false, error: "Network error" }, 502);
   }
-};
+}
 
-function json(body: unknown, status = 200) {
+function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
