@@ -9,6 +9,16 @@
     "binding": "ASSETS",
     "not_found_handling": "404-page"
   },
+  "send_email": [
+    {
+      "name": "CONTACT_EMAIL",
+      "destination_address": "cavaglassbuilders@gmail.com"
+    }
+  ],
+  "vars": {
+    "CONTACT_FROM_EMAIL": "website@cavaglassbuilders.com",
+    "CONTACT_TO_EMAIL": "cavaglassbuilders@gmail.com"
+  },
   "observability": {
     "enabled": true
   }

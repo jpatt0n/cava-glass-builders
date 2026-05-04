@@ -5,7 +5,7 @@ The site lives at **https://cavaglassbuilders.com** and is deployed automaticall
 We use the modern **Workers + Static Assets** model (not classic Pages):
 - Astro builds static HTML/CSS/JS into `./dist`
 - A small Worker entry at `worker/index.ts` serves those files via the `ASSETS` binding
-- The same Worker exposes runtime contact-form config at `GET /api/contact`
+- The same Worker handles the contact form at `/api/contact`, verifies Turnstile, and sends the inquiry email
 
 Configuration lives in [`wrangler.jsonc`](../wrangler.jsonc).
 
@@ -22,19 +22,57 @@ In the Cloudflare dashboard → **Workers & Pages** → **Create** → **Import 
 - **Non-production branch deploy command:** `npx wrangler versions upload`
 - **Path:** `/`
 
-### 2. Add the Web3Forms access key
+### 2. Configure contact-form email and Turnstile
 
 In the Worker → **Settings → Variables and Secrets → Production**:
 
-| Name                    | Value                       | Type   |
-| ----------------------- | --------------------------- | ------ |
-| `WEB3FORMS_ACCESS_KEY`  | (from web3forms.com signup) | Secret |
+| Name                   | Value                                   | Type     |
+| ---------------------- | --------------------------------------- | -------- |
+| `TURNSTILE_SITE_KEY`   | (from the Cloudflare Turnstile widget)  | Variable |
+| `TURNSTILE_SECRET_KEY` | (from the Cloudflare Turnstile widget)  | Secret   |
 
-To get the Web3Forms key: sign up at https://web3forms.com using `cavaglassbuilders@gmail.com`. Submissions will be delivered to that inbox.
+`CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL` are committed in `wrangler.jsonc`:
 
-Web3Forms access keys are public form IDs, not private API tokens. We store the key in Cloudflare so it does not have to be committed to the repo, but the browser still receives it from `GET /api/contact` and submits directly to Web3Forms. This is required for the free Web3Forms flow; server-side submissions require a paid Web3Forms plan plus server IP safelisting.
+| Name                 | Value                         |
+| -------------------- | ----------------------------- |
+| `CONTACT_FROM_EMAIL` | `website@cavaglassbuilders.com` |
+| `CONTACT_TO_EMAIL`   | `cavaglassbuilders@gmail.com` |
 
-Re-deploy after adding or changing the value so the Worker picks it up.
+#### Turnstile widget
+
+In Cloudflare dashboard → **Turnstile** → **Add widget**:
+
+1. Name it `Cava Glass Builders contact form`
+2. Add hostnames:
+   - `cavaglassbuilders.com`
+   - `www.cavaglassbuilders.com`
+   - any preview hostname you want to test
+3. Use **Managed** mode
+4. Copy the site key to `TURNSTILE_SITE_KEY`
+5. Copy the secret key to `TURNSTILE_SECRET_KEY`
+
+#### Email binding
+
+In Cloudflare dashboard → **Email** / **Email Routing**:
+
+1. Enable Email Routing for `cavaglassbuilders.com`
+2. Verify `cavaglassbuilders@gmail.com` as a destination address
+3. Make sure `website@cavaglassbuilders.com` is allowed as a sender/from address for Worker email
+
+The Worker email binding is committed in `wrangler.jsonc`:
+
+```jsonc
+"send_email": [
+  {
+    "name": "CONTACT_EMAIL",
+    "destination_address": "cavaglassbuilders@gmail.com"
+  }
+]
+```
+
+Re-deploy after adding or changing these values so the Worker picks them up.
+
+`WEB3FORMS_ACCESS_KEY` is no longer used and can be removed from the Worker secrets after this migration is deployed.
 
 ### 3. Enable Web Analytics
 

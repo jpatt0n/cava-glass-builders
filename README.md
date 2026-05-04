@@ -4,7 +4,7 @@ Single-page marketing site for [Cava Glass Builders](https://cavaglassbuilders.c
 
 - **Stack:** Astro 5 + Tailwind CSS 4, deployed as static HTML + a small Worker
 - **Hosting:** Cloudflare Workers (Static Assets), auto-deploys on push to `main`
-- **Forms:** Browser → Web3Forms → Gmail, with the access key supplied by the Cloudflare Worker
+- **Forms:** Browser → Cloudflare Worker → Turnstile verification → Cloudflare email binding → Gmail
 - **Images:** Auto-converted to AVIF / WebP at build time via Astro's image pipeline
 
 ---
@@ -34,7 +34,7 @@ The dev server hot-reloads on file changes.
 │   ├── layouts/Base.astro        # <head>, fonts, JSON-LD, scripts
 │   ├── pages/index.astro         # the home page (composes the components)
 │   └── styles/global.css         # Tailwind import + brand tokens (@theme block)
-├── worker/index.ts               # Cloudflare Worker — serves /dist + exposes /api/contact config
+├── worker/index.ts               # Cloudflare Worker — serves /dist + handles /api/contact
 ├── wrangler.jsonc                # Cloudflare deployment config
 ├── astro.config.mjs
 └── package.json
@@ -52,13 +52,13 @@ The dev server hot-reloads on file changes.
 | Showcase / project gallery     | `src/data/site.ts` → `showcase`            |
 | Add or replace a project photo | drop file in `src/assets/projects/`, then reference its base filename in `site.ts` |
 | Contact form fields            | `src/components/Contact.astro`             |
-| Form submission destination    | `src/components/Contact.astro` + Web3Forms key (set in Cloudflare) |
+| Form submission destination    | `src/components/Contact.astro` + `worker/index.ts`                 |
 
 ---
 
 ## Deploy
 
-Pushes to `main` deploy automatically via Cloudflare Pages. See `docs/DEPLOYMENT.md` for the one-time setup (Pages project, env vars, custom domain) and `docs/COLLABORATORS.md` to give the client (or another developer/agent) push access.
+Pushes to `main` deploy automatically via Cloudflare Workers Builds. See `docs/DEPLOYMENT.md` for the one-time setup (Worker project, env vars, custom domain) and `docs/COLLABORATORS.md` to give the client (or another developer/agent) push access.
 
 ---
 

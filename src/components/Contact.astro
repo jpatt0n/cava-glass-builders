@@ -88,6 +88,10 @@ import { site } from "../data/site";
           <textarea required name="message" rows="5"></textarea>
         </label>
 
+        <div class="md:col-span-2">
+          <div id="turnstile-widget" class="turnstile-shell" aria-label="Security verification"></div>
+        </div>
+
         <div class="md:col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p id="form-status" class="text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]" role="status"></p>
           <button
@@ -133,34 +137,128 @@ import { site } from "../data/site";
     background: rgba(255,255,255,0.02);
   }
   .field select option { background: var(--color-ink-soft); color: var(--color-bone); }
+  .turnstile-shell { min-height: 65px; }
 </style>
 
 <script>
+  type TurnstileApi = {
+    render: (
+      selector: string | HTMLElement,
+      options: {
+        sitekey: string;
+        theme?: "light" | "dark" | "auto";
+        callback?: (token: string) => void;
+        "expired-callback"?: () => void;
+        "error-callback"?: () => void;
+      }
+    ) => string;
+    reset: (widgetId?: string) => void;
+  };
+
+  type TurnstileWindow = Window & typeof globalThis & { turnstile?: TurnstileApi };
+  const turnstileWindow = window as TurnstileWindow;
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
   const status = document.getElementById("form-status");
+  const widget = document.getElementById("turnstile-widget");
+  let turnstileWidgetId: string | undefined;
+  let turnstileToken = "";
+
+  const setStatus = (message: string) => {
+    if (status) status.textContent = message;
+  };
+
+  const loadTurnstileScript = () =>
+    new Promise<void>((resolve, reject) => {
+      if (turnstileWindow.turnstile) {
+        resolve();
+        return;
+      }
+
+      const existing = document.querySelector<HTMLScriptElement>("script[data-turnstile-api]");
+      if (existing) {
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener("error", () => reject(new Error("Turnstile failed to load")), { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.dataset.turnstileApi = "true";
+      script.addEventListener("load", () => resolve(), { once: true });
+      script.addEventListener("error", () => reject(new Error("Turnstile failed to load")), { once: true });
+      document.head.append(script);
+    });
+
+  const resetTurnstile = () => {
+    turnstileToken = "";
+    if (turnstileWindow.turnstile && turnstileWidgetId) {
+      turnstileWindow.turnstile.reset(turnstileWidgetId);
+    }
+  };
+
+  const initTurnstile = async () => {
+    if (!widget) return;
+
+    try {
+      const configRes = await fetch(form?.action || "/api/contact", {
+        method: "GET",
+        headers: { Accept: "application/json" },
+      });
+      const config = (await configRes.json().catch(() => ({}))) as {
+        ok?: boolean;
+        turnstileSiteKey?: string;
+        error?: string;
+      };
+
+      if (!configRes.ok || !config.ok || !config.turnstileSiteKey) {
+        throw new Error(config.error || "Verification service not configured");
+      }
+
+      await loadTurnstileScript();
+      if (!turnstileWindow.turnstile) {
+        throw new Error("Turnstile failed to initialize");
+      }
+
+      turnstileWidgetId = turnstileWindow.turnstile.render(widget, {
+        sitekey: config.turnstileSiteKey,
+        theme: "dark",
+        callback: (token) => {
+          turnstileToken = token;
+          setStatus("");
+        },
+        "expired-callback": () => {
+          turnstileToken = "";
+          setStatus("Verification expired. Please try again.");
+        },
+        "error-callback": () => {
+          turnstileToken = "";
+          setStatus("Verification failed to load. Please try again.");
+        },
+      });
+    } catch (err) {
+      console.error("turnstile init error", err);
+      setStatus("Verification unavailable. Please call or email us directly.");
+    }
+  };
+
+  initTurnstile();
+
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
       const label = btn?.querySelector(".btn-label");
-      if (status) status.textContent = "Sending…";
+      setStatus("Sending…");
       btn?.setAttribute("disabled", "true");
       try {
         const data = new FormData(form);
         const website = String(data.get("website") || "").trim();
         if (website) {
-          if (status) status.textContent = "Thank you — we'll be in touch shortly.";
+          setStatus("Thank you — we'll be in touch shortly.");
           form.reset();
           return;
-        }
-
-        const configRes = await fetch(form.action, {
-          method: "GET",
-          headers: { Accept: "application/json" },
-        });
-        const config = (await configRes.json().catch(() => ({}))) as { ok?: boolean; accessKey?: string; error?: string };
-        if (!configRes.ok || !config.ok || !config.accessKey) {
-          throw new Error(config.error || "Email service not configured");
         }
 
         const name = String(data.get("name") || "").trim();
@@ -169,41 +267,47 @@ import { site } from "../data/site";
         const phone = String(data.get("phone") || "").trim();
         const projectType = String(data.get("project_type") || "").trim();
         const message = String(data.get("message") || "").trim();
-        const subject = `New inquiry from ${name}${company ? ` (${company})` : ""}`;
+        const token = String(data.get("cf-turnstile-response") || turnstileToken).trim();
 
-        const res = await fetch("https://api.web3forms.com/submit", {
+        if (!token) {
+          setStatus("Please complete the verification and try again.");
+          btn?.removeAttribute("disabled");
+          return;
+        }
+
+        const res = await fetch(form.action, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
           body: JSON.stringify({
-            access_key: config.accessKey,
-            subject,
-            from_name: "Cava Glass Builders Website",
             name,
             email,
             phone,
             company,
             project_type: projectType,
             message,
-            replyto: email,
+            website,
+            turnstileToken: token,
           }),
         });
         const result = (await res.json().catch(() => ({}))) as {
-          success?: boolean;
+          ok?: boolean;
+          error?: string;
           message?: string;
-          body?: { message?: string };
         };
-        if (!res.ok || result.success === false) {
-          throw new Error(result.message || result.body?.message || `Request failed (${res.status})`);
+        if (!res.ok || result.ok === false) {
+          throw new Error(result.error || result.message || `Request failed (${res.status})`);
         }
-        if (status) status.textContent = "Thank you — we'll be in touch shortly.";
+        setStatus("Thank you — we'll be in touch shortly.");
         if (label) label.textContent = "Sent";
         form.reset();
+        resetTurnstile();
       } catch (err) {
         console.error("contact form error", err);
-        if (status) status.textContent = "Something went wrong. Please call or email us directly.";
+        resetTurnstile();
+        setStatus("Something went wrong. Please call or email us directly.");
         btn?.removeAttribute("disabled");
       }
     });
