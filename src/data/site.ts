@@ -67,7 +67,7 @@ export const audiences = [
   },
   {
     title: "Multifamily & Hotels",
-    body: "Project-management discipline, priority submittals, and clean punch-out. We supply and install showers and mirrors right the first time so the GC can move on.",
+    body: "Project-management discipline, priority submittals, and clean punch-out. We design, supply, and install the shower doors and mirrors right the first time and on-time.",
   },
   {
     title: "High-End Residential",

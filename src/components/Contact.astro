@@ -152,11 +152,15 @@ import { site } from "../data/site";
           body: data,
           headers: { Accept: "application/json" },
         });
-        if (!res.ok) throw new Error("Request failed");
+        const result = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+        if (!res.ok || result.ok === false) {
+          throw new Error(result.error || `Request failed (${res.status})`);
+        }
         if (status) status.textContent = "Thank you — we'll be in touch shortly.";
         if (label) label.textContent = "Sent";
         form.reset();
       } catch (err) {
+        console.error("contact form error", err);
         if (status) status.textContent = "Something went wrong. Please call or email us directly.";
         btn?.removeAttribute("disabled");
       }
