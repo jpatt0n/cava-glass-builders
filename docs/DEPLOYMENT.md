@@ -5,7 +5,7 @@ The site lives at **https://cavaglassbuilders.com** and is deployed automaticall
 We use the modern **Workers + Static Assets** model (not classic Pages):
 - Astro builds static HTML/CSS/JS into `./dist`
 - A small Worker entry at `worker/index.ts` serves those files via the `ASSETS` binding
-- The same Worker handles `POST /api/contact` for the form
+- The same Worker exposes runtime contact-form config at `GET /api/contact`
 
 Configuration lives in [`wrangler.jsonc`](../wrangler.jsonc).
 
@@ -22,7 +22,7 @@ In the Cloudflare dashboard → **Workers & Pages** → **Create** → **Import 
 - **Non-production branch deploy command:** `npx wrangler versions upload`
 - **Path:** `/`
 
-### 2. Add the Web3Forms secret
+### 2. Add the Web3Forms access key
 
 In the Worker → **Settings → Variables and Secrets → Production**:
 
@@ -32,7 +32,9 @@ In the Worker → **Settings → Variables and Secrets → Production**:
 
 To get the Web3Forms key: sign up at https://web3forms.com using `cavaglassbuilders@gmail.com`. Submissions will be delivered to that inbox.
 
-Re-deploy after adding secrets so the Worker picks them up.
+Web3Forms access keys are public form IDs, not private API tokens. We store the key in Cloudflare so it does not have to be committed to the repo, but the browser still receives it from `GET /api/contact` and submits directly to Web3Forms. This is required for the free Web3Forms flow; server-side submissions require a paid Web3Forms plan plus server IP safelisting.
+
+Re-deploy after adding or changing the value so the Worker picks it up.
 
 ### 3. Enable Web Analytics
 

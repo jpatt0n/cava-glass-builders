@@ -147,14 +147,56 @@ import { site } from "../data/site";
       btn?.setAttribute("disabled", "true");
       try {
         const data = new FormData(form);
-        const res = await fetch(form.action, {
-          method: "POST",
-          body: data,
+        const website = String(data.get("website") || "").trim();
+        if (website) {
+          if (status) status.textContent = "Thank you — we'll be in touch shortly.";
+          form.reset();
+          return;
+        }
+
+        const configRes = await fetch(form.action, {
+          method: "GET",
           headers: { Accept: "application/json" },
         });
-        const result = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
-        if (!res.ok || result.ok === false) {
-          throw new Error(result.error || `Request failed (${res.status})`);
+        const config = (await configRes.json().catch(() => ({}))) as { ok?: boolean; accessKey?: string; error?: string };
+        if (!configRes.ok || !config.ok || !config.accessKey) {
+          throw new Error(config.error || "Email service not configured");
+        }
+
+        const name = String(data.get("name") || "").trim();
+        const company = String(data.get("company") || "").trim();
+        const email = String(data.get("email") || "").trim();
+        const phone = String(data.get("phone") || "").trim();
+        const projectType = String(data.get("project_type") || "").trim();
+        const message = String(data.get("message") || "").trim();
+        const subject = `New inquiry from ${name}${company ? ` (${company})` : ""}`;
+
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: config.accessKey,
+            subject,
+            from_name: "Cava Glass Builders Website",
+            name,
+            email,
+            phone,
+            company,
+            project_type: projectType,
+            message,
+            replyto: email,
+          }),
+        });
+        const result = (await res.json().catch(() => ({}))) as {
+          success?: boolean;
+          message?: string;
+          body?: { message?: string };
+        };
+        if (!res.ok || result.success === false) {
+          throw new Error(result.message || result.body?.message || `Request failed (${res.status})`);
         }
         if (status) status.textContent = "Thank you — we'll be in touch shortly.";
         if (label) label.textContent = "Sent";
