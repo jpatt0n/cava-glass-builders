@@ -137,7 +137,8 @@ import { site } from "../data/site";
     background: rgba(255,255,255,0.02);
   }
   .field select option { background: var(--color-ink-soft); color: var(--color-bone); }
-  .turnstile-shell { min-height: 65px; }
+  .turnstile-shell { display: none; min-height: 65px; }
+  .turnstile-shell[data-active="true"] { display: block; }
 </style>
 
 <script>
@@ -162,6 +163,8 @@ import { site } from "../data/site";
   const widget = document.getElementById("turnstile-widget");
   let turnstileWidgetId: string | undefined;
   let turnstileInitPromise: Promise<void> | undefined;
+  let pendingTurnstileResolve: ((token: string) => void) | undefined;
+  let pendingTurnstileReject: ((error: Error) => void) | undefined;
   let turnstileToken = "";
 
   const setStatus = (message: string) => {
@@ -194,6 +197,9 @@ import { site } from "../data/site";
 
   const resetTurnstile = () => {
     turnstileToken = "";
+    pendingTurnstileResolve = undefined;
+    pendingTurnstileReject = undefined;
+    widget?.removeAttribute("data-active");
     if (turnstileWindow.turnstile && turnstileWidgetId) {
       turnstileWindow.turnstile.reset(turnstileWidgetId);
     }
@@ -228,19 +234,30 @@ import { site } from "../data/site";
         callback: (token) => {
           turnstileToken = token;
           setStatus("");
+          pendingTurnstileResolve?.(token);
+          pendingTurnstileResolve = undefined;
+          pendingTurnstileReject = undefined;
         },
         "expired-callback": () => {
           turnstileToken = "";
+          pendingTurnstileReject?.(new Error("Verification expired. Please try again."));
+          pendingTurnstileResolve = undefined;
+          pendingTurnstileReject = undefined;
           setStatus("Verification expired. Please try again.");
         },
         "error-callback": () => {
           turnstileToken = "";
+          pendingTurnstileReject?.(new Error("Verification failed to load. Please try again."));
+          pendingTurnstileResolve = undefined;
+          pendingTurnstileReject = undefined;
           setStatus("Verification failed to load. Please try again.");
         },
       });
     } catch (err) {
       console.error("turnstile init error", err);
       setStatus("Verification unavailable. Please call or email us directly.");
+      turnstileInitPromise = undefined;
+      throw new Error("Verification unavailable. Please call or email us directly.");
     }
   };
 
@@ -249,19 +266,27 @@ import { site } from "../data/site";
     return turnstileInitPromise;
   };
 
-  if (form) {
-    form.addEventListener("focusin", () => void ensureTurnstile(), { once: true });
-    form.addEventListener("pointerenter", () => void ensureTurnstile(), { once: true });
+  const getTurnstileToken = async () => {
+    if (turnstileToken) return turnstileToken;
 
+    widget?.setAttribute("data-active", "true");
+    await ensureTurnstile();
+    if (turnstileToken) return turnstileToken;
+
+    setStatus("Complete the verification to send.");
+    return new Promise<string>((resolve, reject) => {
+      pendingTurnstileResolve = resolve;
+      pendingTurnstileReject = reject;
+    });
+  };
+
+  if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
       const label = btn?.querySelector(".btn-label");
-      setStatus("Checking verification…");
       btn?.setAttribute("disabled", "true");
       try {
-        await ensureTurnstile();
-
         const data = new FormData(form);
         const website = String(data.get("website") || "").trim();
         if (website) {
@@ -276,13 +301,8 @@ import { site } from "../data/site";
         const phone = String(data.get("phone") || "").trim();
         const projectType = String(data.get("project_type") || "").trim();
         const message = String(data.get("message") || "").trim();
-        const token = String(data.get("cf-turnstile-response") || turnstileToken).trim();
-
-        if (!token) {
-          setStatus("Please complete the verification and try again.");
-          btn?.removeAttribute("disabled");
-          return;
-        }
+        setStatus("Checking verification…");
+        const token = await getTurnstileToken();
 
         setStatus("Sending…");
         const res = await fetch(form.action, {
@@ -317,7 +337,8 @@ import { site } from "../data/site";
       } catch (err) {
         console.error("contact form error", err);
         resetTurnstile();
-        setStatus("Something went wrong. Please call or email us directly.");
+        const errorMessage = err instanceof Error ? err.message : "";
+        setStatus(errorMessage.startsWith("Verification") ? errorMessage : "Something went wrong. Please call or email us directly.");
         btn?.removeAttribute("disabled");
       }
     });
