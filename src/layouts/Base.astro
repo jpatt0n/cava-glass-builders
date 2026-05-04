@@ -64,12 +64,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       "foundingDate": String(site.founded)
     })} />
 
-    <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token":"REPLACE_WITH_TOKEN"}'
-    ></script>
   </head>
   <body class="bg-[var(--color-ink)] text-[var(--color-bone)]">
     <slot />

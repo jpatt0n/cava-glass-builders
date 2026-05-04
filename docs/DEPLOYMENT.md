@@ -42,9 +42,8 @@ Re-deploy after adding or changing the value so the Worker picks it up.
 
 1. Cloudflare dashboard → **Web Analytics** → **Add a site**
 2. Pick `cavaglassbuilders.com`
-3. Copy the JS snippet's **token**
-4. Open `src/layouts/Base.astro`, find `data-cf-beacon` and replace `REPLACE_WITH_TOKEN` with the token
-5. Commit, push — auto-deploys
+3. Enable Real User Measurements (RUM) automatic injection in Cloudflare
+4. Do not add the manual JS snippet to the Astro layout
 
 ### 4. Connect the custom domain
 
