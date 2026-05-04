@@ -74,6 +74,8 @@ Re-deploy after adding or changing these values so the Worker picks them up.
 
 `WEB3FORMS_ACCESS_KEY` is no longer used and can be removed from the Worker secrets after this migration is deployed.
 
+`wrangler.jsonc` has `keep_vars` enabled so dashboard-managed Turnstile variables are preserved during deploys. If `GET /api/contact` returns `Verification service not configured`, re-check that `TURNSTILE_SITE_KEY` exists on the deployed Worker environment.
+
 ### 3. Enable Web Analytics
 
 **Web Analytics** (free, no cookie banner needed):
