@@ -161,6 +161,7 @@ import { site } from "../data/site";
   const status = document.getElementById("form-status");
   const widget = document.getElementById("turnstile-widget");
   let turnstileWidgetId: string | undefined;
+  let turnstileInitPromise: Promise<void> | undefined;
   let turnstileToken = "";
 
   const setStatus = (message: string) => {
@@ -198,7 +199,7 @@ import { site } from "../data/site";
     }
   };
 
-  const initTurnstile = async () => {
+  const initTurnstile = async (): Promise<void> => {
     if (!widget) return;
 
     try {
@@ -243,16 +244,24 @@ import { site } from "../data/site";
     }
   };
 
-  initTurnstile();
+  const ensureTurnstile = () => {
+    turnstileInitPromise ||= initTurnstile();
+    return turnstileInitPromise;
+  };
 
   if (form) {
+    form.addEventListener("focusin", () => void ensureTurnstile(), { once: true });
+    form.addEventListener("pointerenter", () => void ensureTurnstile(), { once: true });
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = form.querySelector("button[type=submit]") as HTMLButtonElement | null;
       const label = btn?.querySelector(".btn-label");
-      setStatus("Sending…");
+      setStatus("Checking verification…");
       btn?.setAttribute("disabled", "true");
       try {
+        await ensureTurnstile();
+
         const data = new FormData(form);
         const website = String(data.get("website") || "").trim();
         if (website) {
@@ -275,6 +284,7 @@ import { site } from "../data/site";
           return;
         }
 
+        setStatus("Sending…");
         const res = await fetch(form.action, {
           method: "POST",
           headers: {
