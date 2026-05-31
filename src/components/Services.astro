@@ -25,7 +25,7 @@ function imgFor(name: string): ImageMetadata {
         Our Services
       </p>
       <h2 class="mt-6 font-display text-4xl leading-tight md:text-6xl">
-        Crafted glass for every surface.
+        Crafted glass for residential and commercial builds.
       </h2>
       <p class="mt-6 max-w-2xl text-base leading-relaxed text-[var(--color-bone-muted)] md:text-lg">
         From frameless showers to architectural partitions, we fabricate and
@@ -69,6 +69,15 @@ function imgFor(name: string): ImageMetadata {
                 </li>
               ))}
             </ul>
+            <a
+              href={svc.href}
+              class="group/link mt-8 inline-flex items-center gap-2.5 border-t border-[var(--color-ink-line)] pt-6 text-xs uppercase tracking-luxe text-[var(--color-bone)] transition-colors hover:text-[var(--color-steel)]"
+            >
+              View {svc.title}
+              <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.5" class="transition-transform duration-300 group-hover/link:translate-x-1.5">
+                <path d="M0 5h20M16 1l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
           </div>
         </article>
       ))}

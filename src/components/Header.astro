@@ -1,5 +1,5 @@
 ---
-import { site } from "../data/site";
+import { site, workCategories } from "../data/site";
 ---
 
 <header
@@ -7,7 +7,7 @@ import { site } from "../data/site";
   class="fixed inset-x-0 top-0 z-50 transition-colors duration-300 bg-transparent"
 >
   <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-    <a href="#top" class="flex items-center gap-3" aria-label={site.name}>
+    <a href="/" class="flex items-center gap-3" aria-label={site.name}>
       <img
         src="/logo-cava-white.svg"
         alt={site.name}
@@ -18,14 +18,33 @@ import { site } from "../data/site";
     </a>
 
     <nav class="hidden items-center gap-10 md:flex">
-      <a href="#services" class="nav-link">Services</a>
-      <a href="#work" class="nav-link">Work</a>
-      <a href="#about" class="nav-link">About</a>
-      <a href="#contact" class="nav-link">Contact</a>
+      <a href="/#services" class="nav-link">Services</a>
+
+      <!-- Work dropdown -->
+      <div class="group relative">
+        <a href="/work/showers" class="nav-link flex items-center gap-1.5">
+          Work
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform duration-200 group-hover:rotate-180">
+            <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <div class="invisible absolute left-1/2 top-full -translate-x-1/2 pt-4 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+          <div class="min-w-[210px] border border-[var(--color-ink-line)] bg-[rgba(11,13,16,0.95)] py-2 backdrop-blur-md">
+            {workCategories.map((c) => (
+              <a href={`/work/${c.slug}`} class="block px-5 py-2.5 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)] transition hover:bg-[var(--color-ink-soft)] hover:text-[var(--color-bone)]">
+                {c.nav}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <a href="/#about" class="nav-link">About</a>
+      <a href="/#contact" class="nav-link">Contact</a>
     </nav>
 
     <a
-      href="#contact"
+      href="/#contact"
       class="hidden md:inline-flex items-center gap-2 border border-[var(--color-bone)] px-5 py-2.5 text-xs uppercase tracking-luxe text-[var(--color-bone)] transition hover:bg-[var(--color-bone)] hover:text-[var(--color-ink)]"
     >
       Request a Quote
@@ -51,12 +70,15 @@ import { site } from "../data/site";
     class="hidden border-t border-[var(--color-ink-line)] bg-[var(--color-ink)] md:hidden"
   >
     <nav class="flex flex-col px-6 py-6 text-base">
-      <a href="#services" class="py-3 nav-link-mobile">Services</a>
-      <a href="#work" class="py-3 nav-link-mobile">Work</a>
-      <a href="#about" class="py-3 nav-link-mobile">About</a>
-      <a href="#contact" class="py-3 nav-link-mobile">Contact</a>
+      <a href="/#services" class="py-3 nav-link-mobile">Services</a>
+      <p class="pt-3 pb-1 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">Work</p>
+      {workCategories.map((c) => (
+        <a href={`/work/${c.slug}`} class="py-2.5 pl-4 nav-link-mobile">{c.nav}</a>
+      ))}
+      <a href="/#about" class="py-3 nav-link-mobile">About</a>
+      <a href="/#contact" class="py-3 nav-link-mobile">Contact</a>
       <a
-        href="#contact"
+        href="/#contact"
         class="mt-4 inline-flex items-center justify-center border border-[var(--color-bone)] px-5 py-3 text-xs uppercase tracking-luxe"
       >
         Request a Quote

@@ -1,0 +1,115 @@
+---
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { site, workCategories } from "../../data/site";
+
+export function getStaticPaths() {
+  return workCategories.map((cat) => ({
+    params: { slug: cat.slug },
+    props: { cat },
+  }));
+}
+
+type ImageMetadata = import("astro").ImageMetadata;
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/projects/*.{jpg,jpeg,png,webp,avif}",
+  { eager: true },
+);
+function imgFor(name: string): ImageMetadata {
+  const match = Object.entries(imageModules).find(([k]) => k.includes(`/${name}.`));
+  if (!match) throw new Error(`Image not found: ${name}`);
+  return match[1].default;
+}
+
+const { cat } = Astro.props;
+const pageTitle = `${cat.title} — ${site.name}`;
+---
+
+<Base title={pageTitle} description={cat.intro}>
+  <Header />
+  <main>
+    <section class="relative bg-[var(--color-ink)] pt-32 pb-16 md:pt-40 md:pb-20">
+      <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <p class="flex items-center gap-4 text-xs uppercase tracking-luxe text-[var(--color-bone-muted)]">
+          <span class="hairline"></span>
+          Selected Work
+        </p>
+        <h1 class="mt-6 max-w-3xl font-display text-5xl leading-tight md:text-7xl">
+          {cat.title}
+        </h1>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-[var(--color-bone-muted)] md:text-lg">
+          {cat.intro}
+        </p>
+
+        <!-- Category switcher -->
+        <nav class="mt-10 flex flex-wrap gap-3" aria-label="Work categories">
+          {workCategories.map((c) => {
+            const active = c.slug === cat.slug;
+            return (
+              <a
+                href={`/work/${c.slug}`}
+                aria-current={active ? "page" : undefined}
+                class={`inline-flex items-center border px-5 py-2.5 text-xs uppercase tracking-luxe transition ${
+                  active
+                    ? "border-[var(--color-bone)] bg-[var(--color-bone)] text-[var(--color-ink)]"
+                    : "border-[var(--color-ink-line)] text-[var(--color-bone-muted)] hover:border-[var(--color-bone)] hover:text-[var(--color-bone)]"
+                }`}
+              >
+                {c.nav}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+    </section>
+
+    <!-- Masonry gallery -->
+    <section class="bg-[var(--color-ink)] pb-24 md:pb-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-10">
+        <div class="gap-4 [column-fill:_balance] columns-1 sm:columns-2 lg:columns-3">
+          {cat.gallery.map((item, i) => (
+            <figure
+              class="reveal group relative mb-4 block break-inside-avoid overflow-hidden bg-[var(--color-ink-soft)]"
+              style={`transition-delay:${(i % 4) * 60}ms`}
+            >
+              <Image
+                src={imgFor(item.image)}
+                alt={item.alt}
+                widths={[480, 720, 960, 1280]}
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                format="avif"
+                quality={68}
+                class="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[rgba(11,13,16,0.55)] via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-t border-[var(--color-ink-line)] bg-[var(--color-ink-soft)] py-20 md:py-28">
+      <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-6 md:flex-row md:items-center lg:px-10">
+        <div class="max-w-2xl">
+          <h2 class="font-display text-3xl leading-tight md:text-5xl">
+            Planning a {cat.title.toLowerCase()} project?
+          </h2>
+          <p class="mt-4 max-w-xl text-sm leading-relaxed text-[var(--color-bone-muted)]">
+            Tell us about your space and timeline. We'll provide measurements,
+            hardware options, and builder-friendly pricing.
+          </p>
+        </div>
+        <a
+          href="/#contact"
+          class="inline-flex shrink-0 items-center gap-2 border border-[var(--color-bone)] px-7 py-3.5 text-xs uppercase tracking-luxe text-[var(--color-bone)] transition hover:bg-[var(--color-bone)] hover:text-[var(--color-ink)]"
+        >
+          Request a Quote
+        </a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>

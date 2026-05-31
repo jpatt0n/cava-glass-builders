@@ -22,6 +22,7 @@ export const services = [
   {
     id: "showers",
     title: "Shower Enclosures",
+    href: "/work/showers",
     summary:
       "Frameless, semi-frameless, and fully custom enclosures engineered to fit unconventional spaces with precision hardware in matte black, brushed brass, brushed nickel, and chrome.",
     bullets: [
@@ -30,11 +31,12 @@ export const services = [
       "Steam shower & sauna enclosures",
       "Custom geometry — neo-angle, inline, and curved",
     ],
-    image: "shower-frameless-brass",
+    image: "shower-marble-feature",
   },
   {
     id: "mirrors",
     title: "Mirrors",
+    href: "/work/mirrors",
     summary:
       "Vanity, full-wall, gym, and back-painted mirror installations — cut, polished, and installed to architectural tolerances. Anti-fog and LED-integrated options.",
     bullets: [
@@ -43,11 +45,12 @@ export const services = [
       "Anti-fog and back-lit (LED) mirrors",
       "Mirror backsplashes and feature walls",
     ],
-    image: "mirror-fullwall",
+    image: "mirror-gold-framed-vanity",
   },
   {
     id: "interior-glass",
     title: "Interior Glass",
+    href: "/work/interior-glass",
     summary:
       "Glass partitions, walls, doors, railings, shelving, and wine room enclosures. Architectural glass that defines space without closing it off.",
     bullets: [
@@ -56,9 +59,60 @@ export const services = [
       "Glass shelving and display cases",
       "Wine room and steel-frame doors",
     ],
-    image: "glass-wine-room",
+    image: "interior-wine-room",
   },
 ] as const;
+
+// Work sub-pages: one gallery per category. Linked from the navbar dropdown
+// and the Services section. Images resolve by filename from src/assets/projects.
+export const workCategories = [
+  {
+    slug: "showers",
+    nav: "Shower Enclosures",
+    title: "Shower Enclosures",
+    intro:
+      "Frameless, semi-frameless, and fully custom shower enclosures — engineered to the millimeter and finished in matte black, brushed brass, nickel, or chrome.",
+    gallery: [
+      { image: "shower-marble-feature", alt: "Frameless corner shower with dramatic book-matched marble feature wall and brushed-brass fixtures" },
+      { image: "shower-frameless-gold", alt: "Frameless sliding shower enclosure with brushed-gold hardware and textured tile" },
+      { image: "shower-sliding-marble-tub", alt: "Sliding glass shower over tub with marble subway tile" },
+      { image: "hero-spa-bath", alt: "Spa-style master bath with frameless shower and freestanding tub" },
+      { image: "shower-walkin-marble", alt: "Frameless walk-in shower with marble surround" },
+      { image: "shower-marble-matte", alt: "Marble shower with matte-black sliding hardware" },
+      { image: "shower-frameless-brass", alt: "Frameless shower with brushed-brass hardware" },
+      { image: "shower-sliding-subway", alt: "Sliding glass shower over tub with subway tile" },
+    ],
+  },
+  {
+    slug: "mirrors",
+    nav: "Mirrors",
+    title: "Mirrors",
+    intro:
+      "Vanity, full-wall, and feature mirrors — cut, polished, and installed to architectural tolerances, with anti-fog and LED-integrated options.",
+    gallery: [
+      { image: "mirror-gold-framed-vanity", alt: "Gold-framed vanity mirror flanked by linear sconces on textured wallcovering" },
+      { image: "mirror-double-vanity", alt: "Large gold-framed double-vanity mirror beneath a clerestory window" },
+      { image: "mirror-vanity", alt: "Custom-framed vanity mirror in primary bath" },
+      { image: "mirror-backsplash", alt: "Mirror backsplash in butler's pantry" },
+      { image: "mirror-fullwall", alt: "Full-wall gym mirror installation" },
+    ],
+  },
+  {
+    slug: "interior-glass",
+    nav: "Interior Glass",
+    title: "Interior Glass",
+    intro:
+      "Wine rooms, partitions, railings, shelving, and glass cabinetry — architectural glass that defines space without closing it off.",
+    gallery: [
+      { image: "interior-wine-room", alt: "Frameless glass wine room enclosure with black hardware and wood cabinetry" },
+      { image: "interior-glass-cabinets", alt: "Glass-front display cabinetry in a butler's pantry with marble counters" },
+      { image: "glass-wine-room", alt: "Glass-front wine room with backlit display" },
+      { image: "glass-rain-partition", alt: "Textured rain glass privacy partition" },
+    ],
+  },
+] as const;
+
+export type WorkCategory = (typeof workCategories)[number];
 
 export const audiences = [
   {
