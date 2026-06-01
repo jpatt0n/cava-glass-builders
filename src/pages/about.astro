@@ -1,0 +1,19 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import About from "../components/About.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+
+const pageTitle = `About — ${site.name}`;
+const pageDescription =
+  "Cava Glass Builders is a Houston-based interior glass company serving builders, contractors, and high-end residences with custom shower enclosures, mirrors, and architectural glass.";
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <Header />
+  <main class="pt-16 md:pt-20">
+    <About />
+  </main>
+  <Footer />
+</Base>

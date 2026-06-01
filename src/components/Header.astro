@@ -39,7 +39,7 @@ import { site, workCategories } from "../data/site";
         </div>
       </div>
 
-      <a href="/#about" class="nav-link">About</a>
+      <a href="/about" class="nav-link">About</a>
       <a href="/#contact" class="nav-link">Contact</a>
     </nav>
 
@@ -75,7 +75,7 @@ import { site, workCategories } from "../data/site";
       {workCategories.map((c) => (
         <a href={`/work/${c.slug}`} class="py-2.5 pl-4 nav-link-mobile">{c.nav}</a>
       ))}
-      <a href="/#about" class="py-3 nav-link-mobile">About</a>
+      <a href="/about" class="py-3 nav-link-mobile">About</a>
       <a href="/#contact" class="py-3 nav-link-mobile">Contact</a>
       <a
         href="/#contact"
