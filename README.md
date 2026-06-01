@@ -33,6 +33,8 @@ The dev server hot-reloads on file changes.
 │   ├── data/site.ts              # SINGLE SOURCE OF TRUTH for copy, services, contact info
 │   ├── layouts/Base.astro        # <head>, fonts, JSON-LD, scripts
 │   ├── pages/index.astro         # the home page (composes the components)
+│   ├── pages/about.astro         # standalone /about page (wraps the About component)
+│   ├── pages/work/[slug].astro   # /work/showers, /work/mirrors, /work/interior-glass galleries
 │   └── styles/global.css         # Tailwind import + brand tokens (@theme block)
 ├── worker/index.ts               # Cloudflare Worker — serves /dist + handles /api/contact
 ├── wrangler.jsonc                # Cloudflare deployment config
@@ -49,7 +51,8 @@ The dev server hot-reloads on file changes.
 | Brand colors, fonts, spacing   | `src/styles/global.css` → `@theme` block   |
 | Header navigation              | `src/components/Header.astro`              |
 | Hero copy & headline           | `src/components/Hero.astro`                |
-| Showcase / project gallery     | `src/data/site.ts` → `showcase`            |
+| Work category pages & galleries| `src/data/site.ts` → `workCategories`      |
+| About page copy                | `src/components/About.astro`               |
 | Add or replace a project photo | drop file in `src/assets/projects/`, then reference its base filename in `site.ts` |
 | Contact form fields            | `src/components/Contact.astro`             |
 | Form submission destination    | `src/components/Contact.astro` + `worker/index.ts`                 |
@@ -72,3 +75,17 @@ This site is structured to be edited by Claude Code, Cursor, etc:
 - Images are referenced by filename — drop a new file in `src/assets/projects/` and update the data file.
 
 When asking an agent to make changes, point it at `src/data/site.ts` first; only fall back to the components for visual/structural changes.
+
+---
+
+## Changelog
+
+### 2026-05-31 — Work pages, navbar dropdown, About page
+
+- **Split "Selected Work" into dedicated category pages.** Removed the single-page showcase mosaic from the homepage. Created `/work/showers`, `/work/mirrors`, and `/work/interior-glass`, each a masonry gallery with a pill switcher to jump between categories. All driven by `workCategories` in `src/data/site.ts` via the dynamic route `src/pages/work/[slug].astro`.
+- **Navbar "Work" is now a dropdown** (desktop + mobile) linking to the three category pages. Homepage anchors were made absolute (`/#services`, `/#contact`) so they work from sub-pages.
+- **Services section:** tagline changed to "Crafted glass for residential and commercial builds," and each service card got a "View [category] →" link to its page.
+- **Added 7 new real-project photos** (converted from HEIC → AVIF, stored in `src/assets/projects/`): 3 showers, 2 mirrors, and 2 interior glass including the wine room. Service cards now lead with these.
+- **Moved the About section to its own `/about` page** (`src/pages/about.astro`) and removed it from the homepage to shorten the landing page. Navbar "About" now points to `/about`.
+- Note: `src/components/Showcase.astro` is now unused (no longer imported) and can be deleted.
+
