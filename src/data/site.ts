@@ -7,7 +7,7 @@ export const site = {
   shortDescription:
     "Custom shower enclosures, mirrors, and interior glass — designed and installed for Houston's leading builders, designers, and high-end residences.",
   contact: {
-    email: "cavaglassbuilders@gmail.com",
+    email: "sales@cavaglassbuilders.com",
     phone: "936-230-9991",
     phoneHref: "tel:+19362309991",
     location: "Heights, Houston",
@@ -26,7 +26,7 @@ export const services = [
     summary:
       "Frameless, semi-frameless, and fully custom enclosures engineered to fit unconventional spaces with precision hardware in matte black, brushed brass, brushed nickel, and chrome.",
     bullets: [
-      "Frameless heavy glass (3/8\" & 1/2\")",
+      "Frameless custom shower doors — heavy glass (3/8\" & 1/2\")",
       "Semi-frameless and framed systems",
       "Steam shower & sauna enclosures",
       "Custom geometry — neo-angle, inline, and curved",
@@ -71,7 +71,7 @@ export const workCategories = [
     nav: "Shower Enclosures",
     title: "Shower Enclosures",
     intro:
-      "Frameless, semi-frameless, and fully custom shower enclosures — engineered to the millimeter and finished in matte black, brushed brass, nickel, or chrome.",
+      "Frameless custom shower doors, semi-frameless systems, and fully custom enclosures — engineered to the millimeter and finished in matte black, brushed brass, nickel, or chrome.",
     gallery: [
       { image: "shower-marble-feature", alt: "Frameless corner shower with dramatic book-matched marble feature wall and brushed-brass fixtures" },
       { image: "shower-frameless-gold", alt: "Frameless sliding shower enclosure with brushed-gold hardware and textured tile" },
