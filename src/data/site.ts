@@ -114,6 +114,30 @@ export const workCategories = [
 
 export type WorkCategory = (typeof workCategories)[number];
 
+// "The Cava Way" — company core values, shown on the About page.
+export const coreValues = [
+  {
+    num: "01",
+    title: "Integrity Above All",
+    body: "We operate with strong Christian morals and unwavering honesty. We do what's right, even when it's difficult, and always keep our word.",
+  },
+  {
+    num: "02",
+    title: "Clear Communication",
+    body: "We communicate openly, honestly, and clearly from the first conversation to the final walkthrough. No surprises — just straightforward, timely updates.",
+  },
+  {
+    num: "03",
+    title: "Deliver Value with a Servant Heart",
+    body: "We provide quality materials, expert installation, and fair pricing while serving our customers with humility and care. We go the extra mile to deliver excellent long-term value.",
+  },
+  {
+    num: "04",
+    title: "Do It Right, On Time",
+    body: "We show up when promised and complete every job with excellence and attention to detail. Reliability, quality workmanship, and strong team effort are at the heart of The Cava Way.",
+  },
+] as const;
+
 export const audiences = [
   {
     title: "Home Builders, Remodelers & Designers",
