@@ -80,6 +80,13 @@ When asking an agent to make changes, point it at `src/data/site.ts` first; only
 
 ## Changelog
 
+### 2026-06-07 — Core values, contact email, shower-door copy
+
+- **Added "The Cava Way" core values** to the About page — four principles (Integrity Above All, Clear Communication, Deliver Value with a Servant Heart, Do It Right, On Time) defined in `coreValues` in `src/data/site.ts` and rendered as a numbered (01–04) section in `src/components/About.astro`, using the champagne accent.
+- **Added a long-standing-builder-partnerships line** to the About intro copy.
+- **Updated the displayed contact email** to `sales@cavaglassbuilders.com` (`src/data/site.ts` → `contact.email`); propagates to the contact section and footer. Note: form *delivery* still goes to the gmail inbox — that's set in `wrangler.jsonc` (`send_email` + `CONTACT_TO_EMAIL`) and requires verifying a new destination in Cloudflare Email Routing to change.
+- **Added "frameless custom shower doors" copy** to the Shower Enclosures service bullet and the `/work/showers` intro.
+
 ### 2026-05-31 — Work pages, navbar dropdown, About page
 
 - **Split "Selected Work" into dedicated category pages.** Removed the single-page showcase mosaic from the homepage. Created `/work/showers`, `/work/mirrors`, and `/work/interior-glass`, each a masonry gallery with a pill switcher to jump between categories. All driven by `workCategories` in `src/data/site.ts` via the dynamic route `src/pages/work/[slug].astro`.
